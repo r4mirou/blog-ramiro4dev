@@ -1,0 +1,101 @@
+backend:
+  name: git-gateway
+  commit_messages:
+    create: 'Create {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: '[skip ci] Upload “{{path}}”'
+    deleteMedia: '[skip ci] Delete “{{path}}”'
+
+# Uncomment local_backend when you need to develop in your local
+#local_backend: true # run npx netlify-cms-proxy-server for local testing
+
+media_folder: "static/assets" 
+public_folder: "/assets" 
+
+collections:
+  - name: 'posts' # Used in routes, ie.: /admin/collections/:slug/edit
+    label: 'Posts' # Used in the UI
+    label_singular: 'Post' # Used in the UI, ie: "New Post"
+    description: >
+      Create awesome content here.
+    folder: 'src/content/posts'
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title}} — {{year}}/{{month}}/{{day}}'
+    create: true # Allow users to create new documents in this collection
+    fields: # The fields each document in this collection have
+      - { label: 'Template', name: 'template', widget: 'hidden', default: 'blog-post'}
+      - { label: 'Title', name: 'title', widget: 'string', tagname: 'h1' }
+      - { label: 'Author', name: 'author', widget: 'string'}
+      - { label: 'Slug', name: 'slug', widget: 'string', hint: 'Comece o slug com " / ". Use somente caracteres alfanuméricos e (aceita " - " e " _ "). Não use espaços em caso nenhum.'}
+      - {
+          label: 'Publish Date',
+          name: 'date',
+          widget: 'datetime',
+          dateFormat: 'YYYY-MM-DD',
+          timeFormat: 'HH:mm',
+          format: 'YYYY-MM-DD HH:mm',
+        }
+      - { label: 'SEO Description', name: 'description', widget: 'text' }
+      - {
+          label: 'Featured Image',
+          name: 'featuredImage',
+          widget: 'image',
+          required: false,
+          tagname: '',
+          hint: "620x420"
+        }
+
+      - { label: 'Body', name: 'body', widget: 'markdown', hint: 'Main content goes here.' }
+  - label: "Pages"
+    name: "pages"
+    files:
+      - label: "Contact"
+        name: "contact"
+        file: "src/content/pages/contact.md"
+        fields:
+        - {label: "Template", name: "template", widget: "hidden", default: "contact-page" }
+        - {label: "Slug", name: "slug", widget: "hidden", default: "/contact" }
+        - {label: "Title", name: "title", widget: "string"}
+        - {label: "Body", name: "body", widget: "markdown"}
+  - name: settings
+    label: Settings
+    files:
+      - name: general
+        label: General
+        file: "src/util/site.json"
+        fields:
+          - label: meta
+            name: meta
+            widget: object
+            fields:
+              - widget: string
+                name: title
+                label: Site Title
+                required: true
+              - widget: string
+                name: titleTemplate
+                label: Title Template
+                default: "%s"
+                required: true
+              - widget: string
+                name: siteUrl
+                label: Website URL
+                required: true
+              - widget: text
+                name: description
+                label: Description
+                default: ''
+                required: false
+              - widget: image
+                name: image
+                label: image
+                default: '/assets/logo.png'
+              - widget: string
+                name: twitterUsername
+                label: Twitter
+                required: false
+          - label: "Google Analytics"
+            name: ga
+            widget: string
+            hint: "Add you tracking ID, for example UA-XXXXXXXXX-X"
